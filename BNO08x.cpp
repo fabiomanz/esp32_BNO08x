@@ -42,7 +42,6 @@ BNO08x::BNO08x(bno08x_config_t imu_config)
         imu_config.sclk_speed = 3000000;
     }
 
-    imu_spi_config.clock_source = SPI_CLK_SRC_DEFAULT;
     imu_spi_config.clock_speed_hz = imu_config.sclk_speed; // assign SCLK speed
     imu_spi_config.address_bits = 0;                       // 0 address bits, not using this system
     imu_spi_config.command_bits = 0;                       // 0 command bits, not using this system
@@ -626,13 +625,13 @@ bool BNO08x::run_full_calibration_routine()
     float magf_x = 0;
     float magf_y = 0;
     float magf_z = 0;
-    uint8_t magnetometer_accuracy = (uint8_t) IMUAccuracy::LOW;
+    uint8_t magnetometer_accuracy = (uint8_t) IMUAccuracy::LOW_ACCURACY;
 
     float quat_I = 0;
     float quat_J = 0;
     float quat_K = 0;
     float quat_real = 0;
-    uint8_t quat_accuracy = (uint8_t) IMUAccuracy::LOW;
+    uint8_t quat_accuracy = (uint8_t) IMUAccuracy::LOW_ACCURACY;
 
     uint16_t high_accuracy = 0;
     uint16_t save_calibration_attempt = 0;
@@ -667,7 +666,7 @@ bool BNO08x::run_full_calibration_routine()
 
             vTaskDelay(5 / portTICK_PERIOD_MS);
 
-            if ((magnetometer_accuracy >= (uint8_t) IMUAccuracy::MED) && (quat_accuracy == (uint8_t) IMUAccuracy::HIGH))
+            if ((magnetometer_accuracy >= (uint8_t) IMUAccuracy::MED_ACCURACY) && (quat_accuracy == (uint8_t) IMUAccuracy::HIGH_ACCURACY))
                 high_accuracy++;
             else
                 high_accuracy = 0;
@@ -2640,7 +2639,7 @@ void BNO08x::spi_task()
     {
         ulTaskNotifyTake(pdTRUE, portMAX_DELAY); // block until notified by ISR
 
-        if(imu_config.debug_en)
+        if (imu_config.debug_en)
         {
             ESP_LOGI(TAG, "HINT asserted, time since last assertion: %llu", (esp_timer_get_time() - prev_time));
             prev_time = esp_timer_get_time();

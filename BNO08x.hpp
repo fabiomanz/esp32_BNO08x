@@ -29,9 +29,9 @@ enum channels_t
 /// @brief Sensor accuracy returned during sensor calibration
 enum class IMUAccuracy
 {
-    LOW = 1,
-    MED,
-    HIGH
+    LOW_ACCURACY = 1,
+    MED_ACCURACY,
+    HIGH_ACCURACY
 };
 
 /// @brief IMU configuration settings passed into constructor
